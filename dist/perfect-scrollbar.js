@@ -64,13 +64,13 @@ var cls = {
   element: {
     thumb: function (x) { return ("ps__thumb-" + x); },
     rail: function (x) { return ("ps__rail-" + x); },
-    consuming: 'ps__child--consume',
+    consuming: 'ps__child--consume'
   },
   state: {
     focus: 'ps--focus',
     active: function (x) { return ("ps--active-" + x); },
-    scrolling: function (x) { return ("ps--scrolling-" + x); },
-  },
+    scrolling: function (x) { return ("ps--scrolling-" + x); }
+  }
 };
 
 /*
@@ -317,7 +317,7 @@ var env = {
     typeof navigator !== 'undefined' && navigator.msMaxTouchPoints,
   isChrome:
     typeof navigator !== 'undefined' &&
-    /Chrome/i.test(navigator && navigator.userAgent),
+    /Chrome/i.test(navigator && navigator.userAgent)
 };
 
 var updateGeometry = function(i) {
@@ -464,16 +464,18 @@ function updateCss(element, i) {
 
   set(i.scrollbarX, {
     left: i.scrollbarXLeft,
-    width: i.scrollbarXWidth - i.railBorderXWidth,
+    width: i.scrollbarXWidth - i.railBorderXWidth
   });
   set(i.scrollbarY, {
     top: i.scrollbarYTop,
-    height: i.scrollbarYHeight - i.railBorderYWidth,
+    height: i.scrollbarYHeight - i.railBorderYWidth
   });
 }
 
 var clickRail = function(i) {
-  i.event.bind(i.scrollbarY, 'mousedown', function (e) { return e.stopPropagation(); });
+  i.event.bind(i.scrollbarY, 'click', function (e) { e.preventDefault(); return e.stopPropagation();  });
+  i.event.bind(i.scrollbarYRail, 'click', function (e) { e.preventDefault(); return e.stopPropagation();  });
+  i.event.bind(i.scrollbarY, 'mousedown', function (e) { e.preventDefault(); return e.stopPropagation();  });
   i.event.bind(i.scrollbarYRail, 'mousedown', function (e) {
     var positionTop =
       e.pageY -
@@ -484,10 +486,11 @@ var clickRail = function(i) {
     i.element.scrollTop += direction * i.containerHeight;
     updateGeometry(i);
 
+    e.preventDefault();
     e.stopPropagation();
   });
 
-  i.event.bind(i.scrollbarX, 'mousedown', function (e) { return e.stopPropagation(); });
+  i.event.bind(i.scrollbarX, 'mousedown', function (e) { e.preventDefault(); return e.stopPropagation(); });
   i.event.bind(i.scrollbarXRail, 'mousedown', function (e) {
     var positionLeft =
       e.pageX -
@@ -498,6 +501,7 @@ var clickRail = function(i) {
     i.element.scrollLeft += direction * i.containerWidth;
     updateGeometry(i);
 
+    e.preventDefault();
     e.stopPropagation();
   });
 };
@@ -552,8 +556,10 @@ function bindMouseScrollHandler(
     e.preventDefault();
   }
 
-  function mouseUpHandler() {
+  function mouseUpHandler(e) {
     removeScrollingClass(i, y);
+    e.stopPropagation();
+    e.preventDefault();
     i.event.unbind(i.ownerDocument, 'mousemove', mouseMoveHandler);
   }
 
@@ -852,7 +858,7 @@ var wheel = function(i) {
       }
       shouldPrevent = true;
     }
-
+    
     updateGeometry(i);
 
     shouldPrevent = shouldPrevent || shouldPreventDefault(deltaX, deltaY);
@@ -1092,7 +1098,7 @@ var defaultSettings = function () { return ({
   swipeEasing: true,
   useBothWheelAxes: false,
   wheelPropagation: false,
-  wheelSpeed: 1,
+  wheelSpeed: 1
 }); };
 
 var handlers = {
@@ -1100,7 +1106,7 @@ var handlers = {
   'drag-thumb': dragThumb,
   keyboard: keyboard,
   wheel: wheel,
-  touch: touch,
+  touch: touch
 };
 
 var PerfectScrollbar = function PerfectScrollbar(element, userSettings) {
@@ -1215,7 +1221,7 @@ var PerfectScrollbar = function PerfectScrollbar(element, userSettings) {
         ? 'start'
         : element.scrollTop >= this.contentHeight - this.containerHeight
           ? 'end'
-          : null,
+          : null
   };
 
   this.isAlive = true;
